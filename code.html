@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ColumnPurge | Precision Data Utility</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#002115",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "surface-bright": "#f8f9ff",
+                        "on-surface": "#0b1c30",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#25005a",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "inverse-on-surface": "#eaf1ff",
+                        "inverse-surface": "#213145",
+                        "surface-container-low": "#eff4ff",
+                        "surface": "#f8f9ff",
+                        "secondary-fixed-dim": "#a8cfbc",
+                        "primary-fixed": "#eaddff",
+                        "secondary-container": "#c3ecd7",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#464555",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface-variant": "#d3e4fe",
+                        "on-primary-container": "#e4d4ff",
+                        "outline": "#777587",
+                        "inverse-primary": "#d2bbff",
+                        "surface-tint": "#6d46bb",
+                        "on-secondary-container": "#476c5b",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#e5eeff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#006e4b",
+                        "on-tertiary-container": "#67f4b7",
+                        "surface-container-high": "#dce9ff",
+                        "outline-variant": "#c7c4d8",
+                        "on-primary-fixed-variant": "#552ba1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#002113",
+                        "tertiary": "#005338",
+                        "primary": "#572da3",
+                        "on-secondary-fixed-variant": "#294e3f",
+                        "surface-container-highest": "#d3e4fe",
+                        "tertiary-fixed": "#6ffbbe",
+                        "secondary": "#416656",
+                        "primary-container": "#6f48bd",
+                        "primary-fixed-dim": "#d2bbff",
+                        "secondary-fixed": "#c3ecd7",
+                        "on-background": "#0b1c30"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+        }
+        h1, h2, h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#f8f9ff] dark:bg-slate-950 flex flex-col py-6 px-4 z-50">
+<div class="mb-10 px-2">
+<h1 class="text-[#572da3] font-bold text-xl tracking-tighter">Core Engine</h1>
+<p class="text-xs text-slate-400 font-medium font-inter">Premium Data v2.0</p>
+</div>
+<nav class="flex-grow space-y-1">
+<div class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-[#572da3] dark:text-[#6f48bd] font-bold border-r-4 border-[#572da3] bg-[#eff4ff] dark:bg-slate-900 transition-all cursor-pointer">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</div>
+<div class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 dark:text-slate-500 hover:bg-[#eff4ff] dark:hover:bg-slate-900 transition-all cursor-pointer scale-95 duration-150">
+<span class="material-symbols-outlined mr-3" data-icon="database">database</span>
+<span>Data Sources</span>
+</div>
+<div class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 dark:text-slate-500 hover:bg-[#eff4ff] dark:hover:bg-slate-900 transition-all cursor-pointer scale-95 duration-150">
+<span class="material-symbols-outlined mr-3" data-icon="filter_list">filter_list</span>
+<span>Refinery</span>
+</div>
+<div class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 dark:text-slate-500 hover:bg-[#eff4ff] dark:hover:bg-slate-900 transition-all cursor-pointer scale-95 duration-150">
+<span class="material-symbols-outlined mr-3" data-icon="verified">verified</span>
+<span>Validation</span>
+</div>
+<div class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-xl text-slate-400 dark:text-slate-500 hover:bg-[#eff4ff] dark:hover:bg-slate-900 transition-all cursor-pointer scale-95 duration-150">
+<span class="material-symbols-outlined mr-3" data-icon="ios_share">ios_share</span>
+<span>Export</span>
+</div>
+</nav>
+<div class="mt-auto space-y-6">
+<button class="w-full py-3 px-4 bg-primary text-on-primary rounded-xl font-semibold shadow-xl shadow-primary/10 flex items-center justify-center gap-2 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                New Project
+            </button>
+<div class="space-y-1">
+<div class="flex items-center px-3 py-2 text-xs font-medium text-slate-400 hover:text-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="menu_book">menu_book</span>
+                    Docs
+                </div>
+<div class="flex items-center px-3 py-2 text-xs font-medium text-slate-400 hover:text-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="contact_support">contact_support</span>
+                    Support
+                </div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-grow p-10 bg-surface">
+<div class="max-w-6xl mx-auto space-y-10">
+<!-- Header -->
+<header class="flex justify-between items-end">
+<div>
+<h2 class="text-[1.75rem] font-semibold text-on-surface tracking-tight leading-none mb-2">Drop Empty Columns</h2>
+<p class="text-on-surface-variant font-body">Refine your dataset by automatically pruning null attributes and white-space columns.</p>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/15">
+<span class="material-symbols-outlined text-primary" data-icon="description">description</span>
+<span class="text-sm font-semibold text-primary">raw_dataset_q4.csv</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-error" data-icon="close">close</span>
+</div>
+</header>
+<!-- Dual Input Section & Stats -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Input Area (Bento Card) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant/15 p-8 shadow-[0_20px_40px_rgba(11,28,48,0.04)]">
+<div class="flex gap-8 mb-6">
+<button class="text-sm font-bold text-primary border-b-2 border-primary pb-2">File Upload</button>
+<button class="text-sm font-semibold text-outline pb-2 hover:text-primary transition-colors">Paste Text</button>
+</div>
+<div class="relative group">
+<div class="w-full h-64 bg-surface-container-low border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center group-hover:border-primary/40 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-5xl text-primary/40 mb-4" data-icon="cloud_upload">cloud_upload</span>
+<p class="text-on-surface-variant text-sm font-medium mb-1">Drag and drop your dataset here</p>
+<p class="text-outline text-xs">Supports CSV, JSON, and XLSX (Max 50MB)</p>
+</div>
+</div>
+<div class="mt-8 flex justify-end">
+<button class="px-8 py-4 bg-gradient-to-r from-primary to-primary-container text-white font-bold rounded-xl shadow-lg shadow-primary/20 flex items-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+                            Process Data
+                        </button>
+</div>
+</div>
+<!-- Insight Cards -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<!-- Stat Card: Total -->
+<div class="flex-1 bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+<p class="text-xs font-bold text-outline tracking-wider mb-2">TOTAL COLUMNS</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-on-surface tracking-tight">128</span>
+<span class="text-sm text-outline font-medium">features</span>
+</div>
+</div>
+<!-- Stat Card: Kept -->
+<div class="flex-1 bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-tertiary"></div>
+<p class="text-xs font-bold text-outline tracking-wider mb-2">COLUMNS KEPT</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-tertiary tracking-tight">94</span>
+<span class="text-sm text-outline font-medium">valid</span>
+</div>
+</div>
+<!-- Stat Card: Removed -->
+<div class="flex-1 bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-error"></div>
+<p class="text-xs font-bold text-outline tracking-wider mb-2">COLUMNS REMOVED</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-error tracking-tight">34</span>
+<span class="text-sm text-outline font-medium">null</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Results Preview Section -->
+<section class="space-y-6">
+<div class="flex justify-between items-center">
+<h3 class="text-xl font-bold text-on-surface tracking-tight">Results Preview</h3>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-secondary-container text-on-secondary-container font-semibold rounded-lg hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="download">download</span>
+                        Download Processed CSV
+                    </button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 overflow-hidden shadow-[0_20px_40px_rgba(11,28,48,0.04)]">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high">
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">ID</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">User Name</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Email Address</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Region</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Last Login</th>
+</tr>
+</thead>
+<tbody class="text-sm font-body text-on-surface">
+<tr class="bg-surface hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">#8842</td>
+<td class="px-6 py-5 font-semibold">Alex Sterling</td>
+<td class="px-6 py-5">a.sterling@precision.io</td>
+<td class="px-6 py-5">North America</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded">ACTIVE</span>
+</td>
+<td class="px-6 py-5 text-outline">2 mins ago</td>
+</tr>
+<tr class="bg-surface-container-low hover:bg-surface-container transition-colors">
+<td class="px-6 py-5">#8843</td>
+<td class="px-6 py-5 font-semibold">Elena Vance</td>
+<td class="px-6 py-5">evance@nexus.com</td>
+<td class="px-6 py-5">Europe</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded">ACTIVE</span>
+</td>
+<td class="px-6 py-5 text-outline">1 hour ago</td>
+</tr>
+<tr class="bg-surface hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">#8844</td>
+<td class="px-6 py-5 font-semibold">Marcus Thorne</td>
+<td class="px-6 py-5">mthorne@core.net</td>
+<td class="px-6 py-5">Asia Pacific</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-error-container text-on-error-container text-[10px] font-bold rounded">INACTIVE</span>
+</td>
+<td class="px-6 py-5 text-outline">Yesterday</td>
+</tr>
+<tr class="bg-surface-container-low hover:bg-surface-container transition-colors">
+<td class="px-6 py-5">#8845</td>
+<td class="px-6 py-5 font-semibold">Sarah Connor</td>
+<td class="px-6 py-5">sconnor@resistance.tech</td>
+<td class="px-6 py-5">Global</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded">ACTIVE</span>
+</td>
+<td class="px-6 py-5 text-outline">Just now</td>
+</tr>
+<tr class="bg-surface hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-5">#8846</td>
+<td class="px-6 py-5 font-semibold">John Smith</td>
+<td class="px-6 py-5">jsmith@corp.com</td>
+<td class="px-6 py-5">North America</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-surface-variant text-on-surface-variant text-[10px] font-bold rounded">PENDING</span>
+</td>
+<td class="px-6 py-5 text-outline">3 days ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bg-surface-container-high/30 px-6 py-4 border-t border-outline-variant/15 flex justify-between items-center">
+<span class="text-xs text-outline font-medium uppercase tracking-widest">Showing 5 of 1,240 rows</span>
+<div class="flex gap-2">
+<button class="p-2 rounded hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-2 rounded hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Background Decorative Elements -->
+<div class="fixed top-0 right-0 -z-10 opacity-40">
+<div class="w-[800px] h-[800px] bg-gradient-to-br from-primary-container/20 to-transparent blur-[120px] rounded-full"></div>
+</div>
+</body></html>
