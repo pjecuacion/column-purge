@@ -1,8 +1,8 @@
 # column-purge
 
-Desktop Jira CSV analyzer for exploring epics, stories, estimates, sprint data, and cleanup exports.
+Jira CSV analyzer for exploring epics, stories, estimates, sprint data, and cleanup exports.
 
-The repo also contains an earlier browser prototype for dropping empty CSV/Markdown columns, but the main working app today is the Python Tkinter tool in `app.py`.
+The repo contains both a Python Tkinter desktop app in `app.py` and a browser-based GitHub Pages version in `index.html`.
 
 ## What It Does
 
@@ -20,11 +20,19 @@ The repo also contains an earlier browser prototype for dropping empty CSV/Markd
 - Exports the active report as CSV.
 - Exports a cleaned CSV with fully empty columns removed.
 
+## Versions
+
+- `app.py` provides the desktop Tkinter version.
+- `index.html` + `index.css` + `index.js` provide the static browser version for GitHub Pages.
+- Both versions work from local CSV files and do not require a backend.
+
 ## Repo Layout
 
 - `app.py` - main Tkinter desktop application for Jira CSV analysis.
-- `cutdown.csv` - sample Jira-style CSV fixture.
-- `index.html` - browser prototype for removing empty columns from CSV and Markdown tables.
+- `sample-jira.csv` - safe synthetic Jira-style CSV demo fixture.
+- `index.html` - browser-based Jira CSV analyzer for GitHub Pages.
+- `index.css` - styling for the browser app.
+- `index.js` - client-side Jira CSV parsing, filters, reports, and export logic.
 - `code.html` - visual/reference HTML file.
 
 ## Requirements
@@ -49,6 +57,20 @@ If you are using the local virtual environment in this repo:
 python app.py
 ```
 
+## GitHub Pages
+
+The browser version is designed to work as a static site on GitHub Pages.
+
+- `index.html` loads `index.css` and `index.js` as regular static assets.
+- CSV parsing, filtering, reporting, and export all happen in the browser.
+- No server, API, or build step is required.
+
+To use it on GitHub Pages:
+
+1. Push `index.html`, `index.css`, `index.js`, and any sample assets you want to keep such as `sample-jira.csv`.
+2. Enable GitHub Pages for the repo or branch.
+3. Open the published site and upload a Jira CSV export.
+
 ## How To Use
 
 1. Launch the app.
@@ -57,6 +79,8 @@ python app.py
 4. Narrow the dataset with filters such as issue type, status, sprint, assignee, or quick presets.
 5. Use `Export Report` to save the current view.
 6. Use `Export Cleaned CSV` to save the original dataset with empty columns removed.
+
+For the GitHub Pages version, the flow is the same except file open/save happens through the browser instead of Tkinter dialogs.
 
 ## Epic Breakdown View
 
@@ -96,6 +120,7 @@ Missing fields do not necessarily prevent loading, but some reports or filters m
 - Duplicate Jira headers are automatically disambiguated internally.
 - Estimate reporting prefers `Story Points`, then falls back to `Dev Story points`, then `Test Story Points`.
 - Parent containers are currently recognized as epic, feature, or initiative.
-- `index.html` and `code.html` are older browser-side prototype/reference files and are not the main implementation path.
+- `index.html` is the static browser version intended for GitHub Pages.
+- `code.html` remains a visual/reference HTML file.
 
 

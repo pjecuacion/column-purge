@@ -1,545 +1,124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drop Empty Columns - Remove Empty Columns from Markdown Tables & CSV Files</title>
-    <meta name="description" content="Free online tool to remove empty columns from Markdown tables and CSV files. Process data directly in your browser - fast, secure, and privacy-friendly.">
-    <meta name="keywords" content="drop empty columns, remove empty columns, clean csv, markdown table cleaner, data cleanup, csv tool, excel cleaner, data processing">
-    <meta name="author" content="Prince Ecuacion">
-    <meta name="robots" content="index, follow">
-
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://pjecuacion.github.io/column-purge/">
-    <meta property="og:title" content="Drop Empty Columns - Clean CSV & Markdown Tables">
-    <meta property="og:description" content="Free tool to remove empty columns from Markdown tables and CSV files. Process data directly in your browser.">
-    <meta property="og:image" content="https://pjecuacion.github.io/column-purge/og-image.png">
-
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://pjecuacion.github.io/column-purge/">
-    <meta property="twitter:title" content="Drop Empty Columns - Clean CSV & Markdown Tables">
-    <meta property="twitter:description" content="Free tool to remove empty columns from Markdown tables and CSV files. Process data directly in your browser.">
-    <meta property="twitter:image" content="https://pjecuacion.github.io/column-purge/og-image.png">
-
-    <link rel="canonical" href="https://pjecuacion.github.io/column-purge/">
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --primary: #000;
-            --bg: #fff;
-            --surface: #f7f7f7;
-            --border: #e5e5e5;
-            --text-muted: #666;
-            --success: #16a34a;
-            --danger: #dc2626;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--primary);
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 60px 24px;
-        }
-
-        h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            margin-bottom: 32px;
-        }
-
-        .support-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: #FFDD00;
-            color: #000;
-            text-decoration: none;
-            border-radius: 24px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            transition: opacity 0.2s;
-        }
-
-        .support-link:hover {
-            opacity: 0.85;
-        }
-
-        .card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            margin-bottom: 24px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 20px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 10px 0;
-            background: none;
-            border: none;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            color: var(--primary);
-        }
-
-        .tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        .panel { display: none; }
-        .panel.active { display: block; }
-
-        .dropzone {
-            border: 1px dashed var(--border);
-            border-radius: 8px;
-            padding: 48px 24px;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .dropzone:hover, .dropzone.dragover {
-            border-color: var(--primary);
-            background: var(--surface);
-        }
-
-        .dropzone p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .btn {
-            background: var(--primary);
-            color: var(--bg);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .btn:hover:not(:disabled) {
-            opacity: 0.8;
-        }
-
-        .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--primary);
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            background: #e5e5e5;
-        }
-
-        textarea {
-            width: 100%;
-            height: 200px;
-            font-family: ui-monospace, 'SF Mono', monospace;
-            font-size: 13px;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            resize: vertical;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .select-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .select-row label {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .select-row select {
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 13px;
-            background: var(--bg);
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-top: 24px;
-        }
-
-        .stat {
-            text-align: center;
-            padding: 20px;
-            background: var(--surface);
-            border-radius: 8px;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 600;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .stat.kept .stat-value { color: var(--success); }
-        .stat.removed .stat-value { color: var(--danger); }
-
-        .output-section {
-            margin-top: 24px;
-        }
-
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .output-header h3 {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: center;
-            margin-top: 24px;
-        }
-
-        .error {
-            color: var(--danger);
-            background: #fef2f2;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-top: 16px;
-            display: none;
-        }
-
-        .error.visible { display: block; }
-
-        .file-input { display: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jira CSV Analyzer</title>
+  <meta
+    name="description"
+    content="Analyze Jira CSV exports in the browser on GitHub Pages. Filter issues, review reports, inspect epic breakdowns, and export cleaned CSV files."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="container">
-        <a href="https://buymeacoffee.com/pjecuacion" class="support-link" target="_blank" rel="noopener">
-            Buy Me a Coffee ☕
-        </a>
-        <h1>Drop Empty Columns</h1>
-        <p class="subtitle">Remove empty columns from Markdown tables or CSV files</p>
-
-        <div class="card">
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('upload', event)">Upload</button>
-                <button class="tab" onclick="switchTab('paste', event)">Paste</button>
-            </div>
-
-            <div id="panel-upload" class="panel active">
-                <div class="dropzone" id="dropzone">
-                    <p><strong>Drag and drop</strong> your file here</p>
-                    <p style="font-size: 12px; margin-bottom: 16px;">.md or .csv files</p>
-                    <button class="btn" onclick="document.getElementById('file-input').click()">Browse Files</button>
-                    <input type="file" id="file-input" class="file-input" accept=".md,.csv">
-                </div>
-                <div id="file-name" style="text-align: center; margin-top: 16px; font-size: 14px; color: var(--success);"></div>
-            </div>
-
-            <div id="panel-paste" class="panel">
-                <textarea id="text-input" placeholder="Paste your markdown table or CSV content here..."></textarea>
-                <div class="select-row">
-                    <label>File type:</label>
-                    <select id="text-type">
-                        <option value="md">Markdown (.md)</option>
-                        <option value="csv">CSV (.csv)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="actions">
-                <button class="btn" id="process-btn" disabled>Process</button>
-            </div>
-
-            <div class="error" id="error"></div>
-
-            <div class="stats" id="stats" style="display: none;">
-                <div class="stat">
-                    <div class="stat-value" id="stat-total">0</div>
-                    <div class="stat-label">Total Columns</div>
-                </div>
-                <div class="stat kept">
-                    <div class="stat-value" id="stat-kept">0</div>
-                    <div class="stat-label">Kept</div>
-                </div>
-                <div class="stat removed">
-                    <div class="stat-value" id="stat-removed">0</div>
-                    <div class="stat-label">Removed</div>
-                </div>
-            </div>
-
-            <div class="output-section" id="output-section" style="display: none;">
-                <div class="output-header">
-                    <h3>Result</h3>
-                    <button class="btn btn-secondary" id="download-btn">Download</button>
-                </div>
-                <textarea id="output" readonly></textarea>
-            </div>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow">Static GitHub Pages App</div>
+          <h1>Jira CSV Analyzer in the browser.</h1>
+          <p class="lead">
+            Analyze Jira CSV exports in your browser with flexible filters, useful report views,
+            epic grouping, and easy CSV exports. No backend required.
+          </p>
         </div>
+        <div class="actions">
+          <a class="support" href="https://buymeacoffee.com/pjecuacion" target="_blank" rel="noopener">Buy Me a Coffee</a>
+          <label class="file-btn" for="file-input">Open Jira CSV</label>
+        </div>
+      </div>
+      <div class="hero-meta">
+        <div class="meta"><strong>Reports</strong><span>7 views</span></div>
+        <div class="meta"><strong>Hosting</strong><span>GitHub Pages safe</span></div>
+        <div class="meta"><strong>Privacy</strong><span>Browser only</span></div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="panel">
+        <h2>Dataset</h2>
+        <p class="sub">Upload a Jira CSV export to unlock the same analysis surface as <code>app.py</code>.</p>
+        <div class="stack">
+          <div class="drop" id="dropzone">
+            <strong>Drop your CSV here</strong>
+            <p>Duplicate headers are normalized locally in the browser.</p>
+            <div class="actions drop-actions">
+              <label class="file-btn" for="file-input">Browse CSV</label>
+              <button class="btn-ghost" id="sample-btn" type="button">Load Demo</button>
+            </div>
+            <input class="file-input" id="file-input" type="file" accept=".csv,text/csv">
+          </div>
+          <div class="line" id="file-name">No CSV loaded</div>
+          <div class="line" id="summary">Load a Jira CSV export to begin.</div>
+          <div class="line" id="status">Ready</div>
+          <div class="error" id="error"></div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><strong>Rows</strong><span id="rows-stat">0</span></div>
+          <div class="stat"><strong>Columns</strong><span id="cols-stat">0</span></div>
+          <div class="stat"><strong>Issues</strong><span id="issues-stat">0</span></div>
+          <div class="stat"><strong>Filtered</strong><span id="filtered-stat">0</span></div>
+        </div>
+
+        <div class="toolbar">
+          <button class="btn" id="export-report" type="button" disabled>Export Report</button>
+          <button class="btn-ghost" id="export-cleaned" type="button" disabled>Export Cleaned CSV</button>
+          <button class="btn-ghost" id="reset" type="button" disabled>Reset Filters</button>
+        </div>
+
+        <div class="controls">
+          <section class="card">
+            <div class="title">Report And Search</div>
+            <div class="fields">
+              <div class="field"><label for="report">Report</label><select id="report"></select></div>
+              <div class="field"><label for="preset">Quick Preset</label><select id="preset"></select></div>
+              <div class="field full"><label for="search">Search</label><input id="search" type="search" placeholder="Issue key, summary, parent, assignee"></div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="title">Core Filters</div>
+            <div class="fields">
+              <div class="field"><label for="issue-type">Issue Type</label><select id="issue-type"></select></div>
+              <div class="field"><label for="issue-status">Status</label><select id="issue-status"></select></div>
+              <div class="field"><label for="status-category">Status Category</label><select id="status-category"></select></div>
+              <div class="field"><label for="parent-key">Parent Key</label><select id="parent-key"></select></div>
+              <div class="field"><label for="parent-kind">Parent Kind</label><select id="parent-kind"></select></div>
+              <div class="field"><label for="assignee">Assignee</label><select id="assignee"></select></div>
+              <div class="field full"><label for="sprint">Sprint</label><select id="sprint"></select></div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="title">Quick Filters</div>
+            <div class="checks" id="checks"></div>
+          </section>
+        </div>
+      </aside>
+
+      <section class="panel">
+        <div class="result-head">
+          <div>
+            <h3 id="result-title">Active Report</h3>
+            <div class="meta-line" id="result-meta">Load a Jira CSV export to view reports.</div>
+          </div>
+          <button class="btn-ghost" id="toggle-epics" type="button" disabled>Collapse All</button>
+        </div>
+        <div id="results"><div class="placeholder">Load a Jira CSV export to view reports.</div></div>
+        <p class="note">
+          All parsing, filtering, and exports happen locally in the page, so this works on GitHub Pages without a server.
+        </p>
+      </section>
     </div>
+  </main>
 
-    <script>
-        let currentText = null;
-        let currentExt = 'md';
-
-        function switchTab(tab, event) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
-            document.getElementById('panel-' + tab).classList.add('active');
-
-            if (tab === 'upload') {
-                currentText = null;
-                document.getElementById('file-name').textContent = '';
-                document.getElementById('process-btn').disabled = true;
-            }
-        }
-
-        const dropzone = document.getElementById('dropzone');
-
-        dropzone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropzone.classList.add('dragover');
-        });
-
-        dropzone.addEventListener('dragleave', () => {
-            dropzone.classList.remove('dragover');
-        });
-
-        dropzone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropzone.classList.remove('dragover');
-            handleFile(e.dataTransfer.files[0]);
-        });
-
-        document.getElementById('file-input').addEventListener('change', (e) => {
-            handleFile(e.target.files[0]);
-        });
-
-        function handleFile(file) {
-            if (!file) return;
-            if (!file.name.endsWith('.md') && !file.name.endsWith('.csv')) {
-                showError('Please upload a .md or .csv file');
-                return;
-            }
-
-            currentExt = file.name.split('.').pop();
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                currentText = e.target.result;
-                document.getElementById('file-name').textContent = file.name;
-                document.getElementById('process-btn').disabled = false;
-            };
-            reader.onerror = () => showError('Failed to read file');
-            reader.readAsText(file);
-        }
-
-        document.getElementById('text-input').addEventListener('input', (e) => {
-            currentText = e.target.value;
-            document.getElementById('process-btn').disabled = !currentText.trim();
-        });
-
-        document.getElementById('text-type').addEventListener('change', (e) => {
-            currentExt = e.target.value;
-        });
-
-        document.getElementById('process-btn').addEventListener('click', () => {
-            document.getElementById('error').classList.remove('visible');
-            document.getElementById('stats').style.display = 'none';
-            document.getElementById('output-section').style.display = 'none';
-
-            if (!currentText) {
-                showError('No content to process');
-                return;
-            }
-
-            try {
-                const result = currentExt === 'md' ? processMarkdown(currentText) : processCSV(currentText);
-
-                document.getElementById('stat-total').textContent = result.total;
-                document.getElementById('stat-kept').textContent = result.kept;
-                document.getElementById('stat-removed').textContent = result.total - result.kept;
-                document.getElementById('output').value = result.result;
-
-                document.getElementById('stats').style.display = 'grid';
-                document.getElementById('output-section').style.display = 'block';
-
-                document.getElementById('download-btn').onclick = () => {
-                    const blob = new Blob([result.result], { type: 'text/plain' });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = 'output.' + currentExt;
-                    a.click();
-                };
-            } catch (err) {
-                showError(err.message);
-            }
-        });
-
-        function showError(msg) {
-            const el = document.getElementById('error');
-            el.textContent = msg;
-            el.classList.add('visible');
-        }
-
-        function splitMdRow(row) {
-            const parts = row.split('|');
-            return parts.slice(1, -1);
-        }
-
-        function rebuildMdRow(cells) {
-            return '| ' + cells.map(c => c.trim()).join(' | ') + ' |';
-        }
-
-        function processMarkdown(text) {
-            const lines = text.split('\n').map(l => l.trimEnd()).filter(l => l.trim());
-            if (lines.length < 2) return { result: text, total: 0, kept: 0 };
-
-            const headerCells = splitMdRow(lines[0]);
-            const dataRows = lines.slice(2).map(line => splitMdRow(line));
-            const total = headerCells.length;
-
-            const keep = [];
-            for (let i = 0; i < total; i++) {
-                for (const row of dataRows) {
-                    if (i < row.length && row[i].trim()) {
-                        keep.push(i);
-                        break;
-                    }
-                }
-            }
-
-            const sepRow = '| ' + keep.map(() => '---').join(' | ') + ' |';
-            const outLines = [
-                rebuildMdRow(headerCells.filter((_, i) => keep.includes(i))),
-                sepRow,
-                ...dataRows.map(row => rebuildMdRow(keep.map(i => row[i] || '')))
-            ];
-
-            return { result: outLines.join('\n') + '\n', total, kept: keep.length };
-        }
-
-        class CSVParser {
-            parseLine(line) {
-                const result = [];
-                let current = '';
-                let inQuotes = false;
-
-                for (let i = 0; i < line.length; i++) {
-                    const char = line[i];
-                    if (inQuotes) {
-                        if (char === '"') {
-                            if (i + 1 < line.length && line[i + 1] === '"') {
-                                current += '"';
-                                i++;
-                            } else {
-                                inQuotes = false;
-                            }
-                        } else {
-                            current += char;
-                        }
-                    } else {
-                        if (char === '"') {
-                            inQuotes = true;
-                        } else if (char === ',') {
-                            result.push(current);
-                            current = '';
-                        } else {
-                            current += char;
-                        }
-                    }
-                }
-                result.push(current);
-                return result;
-            }
-        }
-
-        function processCSV(text) {
-            const parser = new CSVParser();
-            const rows = text.split(/\r?\n/).filter(l => l.trim()).map(line => parser.parseLine(line));
-            if (rows.length === 0) return { result: text, total: 0, kept: 0 };
-
-            const header = rows[0];
-            const dataRows = rows.slice(1);
-            const total = header.length;
-
-            const keep = [];
-            for (let i = 0; i < total; i++) {
-                for (const row of dataRows) {
-                    if (i < row.length && row[i].trim()) {
-                        keep.push(i);
-                        break;
-                    }
-                }
-            }
-
-            const out = [];
-            out.push(header.filter((_, i) => keep.includes(i)).join(','));
-            for (const row of dataRows) {
-                out.push(keep.map(i => row[i] || '').join(','));
-            }
-
-            return { result: out.join('\n') + '\n', total, kept: keep.length };
-        }
-    </script>
+  <script src="index.js"></script>
 </body>
 </html>
