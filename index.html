@@ -9,21 +9,18 @@
     <meta name="author" content="Prince Ecuacion">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://pjecuacion.github.io/column-purge/">
     <meta property="og:title" content="Drop Empty Columns - Clean CSV & Markdown Tables">
     <meta property="og:description" content="Free tool to remove empty columns from Markdown tables and CSV files. Process data directly in your browser.">
     <meta property="og:image" content="https://pjecuacion.github.io/column-purge/og-image.png">
 
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://pjecuacion.github.io/column-purge/">
     <meta property="twitter:title" content="Drop Empty Columns - Clean CSV & Markdown Tables">
     <meta property="twitter:description" content="Free tool to remove empty columns from Markdown tables and CSV files. Process data directly in your browser.">
     <meta property="twitter:image" content="https://pjecuacion.github.io/column-purge/og-image.png">
 
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://pjecuacion.github.io/column-purge/">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -282,8 +279,8 @@
 
         <div class="card">
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('upload')">Upload</button>
-                <button class="tab" onclick="switchTab('paste')">Paste</button>
+                <button class="tab active" onclick="switchTab('upload', event)">Upload</button>
+                <button class="tab" onclick="switchTab('paste', event)">Paste</button>
             </div>
 
             <div id="panel-upload" class="panel active">
@@ -339,18 +336,18 @@
     </div>
 
     <script>
-        let currentFile = null;
         let currentText = null;
         let currentExt = 'md';
 
-        function switchTab(tab) {
+        function switchTab(tab, event) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
             document.getElementById('panel-' + tab).classList.add('active');
 
             if (tab === 'upload') {
-                currentFile = null;
                 currentText = null;
                 document.getElementById('file-name').textContent = '';
                 document.getElementById('process-btn').disabled = true;
@@ -444,7 +441,6 @@
             el.classList.add('visible');
         }
 
-        // Markdown processing
         function splitMdRow(row) {
             const parts = row.split('|');
             return parts.slice(1, -1);
@@ -482,7 +478,6 @@
             return { result: outLines.join('\n') + '\n', total, kept: keep.length };
         }
 
-        // CSV processing
         class CSVParser {
             parseLine(line) {
                 const result = [];
