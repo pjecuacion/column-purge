@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jira CSV Analyzer Guide</title>
+  <meta
+    name="description"
+    content="User guide for the Jira CSV Analyzer GitHub Pages app. Learn how filters, reports, estimate mismatch, exports, and parent matching work."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <main class="shell guide-shell">
+    <section class="hero guide-hero">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow">User Guide</div>
+          <h1>How the Jira CSV Analyzer works.</h1>
+          <p class="lead">
+            This guide explains what CSVs the app expects, how the filters behave, what each report shows,
+            and what terms like <code>Estimate mismatch</code> and <code>Parent Kind</code> mean in practice.
+          </p>
+        </div>
+        <div class="actions">
+          <a class="btn" href="index.html">Open App</a>
+          <a class="btn-ghost" href="sample-jira.csv">Download Demo CSV</a>
+        </div>
+      </div>
+      <div class="hero-meta">
+        <div class="meta"><strong>Runs</strong><span>In your browser</span></div>
+        <div class="meta"><strong>Needs</strong><span>A Jira CSV export</span></div>
+        <div class="meta"><strong>Hosting</strong><span>GitHub Pages safe</span></div>
+      </div>
+    </section>
+
+    <div class="guide-grid">
+      <aside class="panel guide-nav">
+        <h2>On This Page</h2>
+        <div class="guide-links">
+          <a href="#start">Getting Started</a>
+          <a href="#estimates">Estimates And Mismatch</a>
+          <a href="#filters">Filters</a>
+          <a href="#presets">Quick Presets</a>
+          <a href="#reports">Reports</a>
+          <a href="#exports">Exports</a>
+          <a href="#notes">Helpful Notes</a>
+        </div>
+      </aside>
+
+      <section class="guide-stack">
+        <section class="panel" id="start">
+          <h2>Getting Started</h2>
+          <div class="guide-copy">
+            <p>Open the app, load a Jira CSV export, then choose a report and narrow the dataset with filters.</p>
+            <p>The app works entirely in the browser. Your CSV is parsed locally, and exports are generated locally too.</p>
+          </div>
+          <div class="guide-card-grid">
+            <article class="card guide-card">
+              <div class="title">What CSVs work best</div>
+              <p>The app is built for Jira CSV exports and recognizes common fields such as <code>Issue key</code>, <code>Summary</code>, <code>Issue Type</code>, <code>Status</code>, <code>Status Category</code>, <code>Parent key</code>, <code>Sprint</code>, <code>Assignee</code>, and the story-point fields.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Duplicate headers</div>
+              <p>If Jira exports duplicate column names, the app keeps them and disambiguates them internally so the file can still be analyzed.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Missing fields</div>
+              <p>The CSV can still load if some columns are missing, but some filters or reports may be less useful when those fields are absent.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="estimates">
+          <h2>Estimates And Mismatch</h2>
+          <div class="guide-copy">
+            <p>The app reads up to three estimate fields: <code>Story Points</code>, <code>Dev Story points</code>, and <code>Test Story Points</code>.</p>
+            <p>For totals and summary views, it chooses one effective estimate in this order: <code>Story Points</code> first, then <code>Dev Story points</code>, then <code>Test Story Points</code>.</p>
+          </div>
+          <div class="callout">
+            <strong>What "Estimate mismatch" means</strong>
+            <p>The issue is flagged when at least two of those numeric estimate fields are present and they do not match each other. Example: Story Points = 5 and Dev Story points = 8. If only one field has a value, or all populated values are the same, it is not a mismatch.</p>
+          </div>
+          <div class="guide-copy">
+            <p><code>Missing Story Points</code>, <code>Missing dev points</code>, and <code>Missing test points</code> are separate checks. A row can have an effective estimate and still be missing one of the other point fields.</p>
+          </div>
+        </section>
+
+        <section class="panel" id="filters">
+          <h2>Filters</h2>
+          <div class="guide-copy">
+            <p>All filters combine together. In other words, the app keeps only issues that satisfy every selected dropdown, search term, preset, and checkbox.</p>
+          </div>
+
+          <div class="guide-card-grid">
+            <article class="card guide-card">
+              <div class="title">Report And Search</div>
+              <ul class="guide-list">
+                <li><strong>Report</strong> changes the active output view.</li>
+                <li><strong>Quick Preset</strong> applies a saved logic bundle before the other filters.</li>
+                <li><strong>Search</strong> matches text inside issue key, summary, parent key, parent summary, and assignee.</li>
+              </ul>
+            </article>
+
+            <article class="card guide-card">
+              <div class="title">Core Dropdown Filters</div>
+              <ul class="guide-list">
+                <li><strong>Issue Type</strong> filters to one Jira issue type value.</li>
+                <li><strong>Status</strong> filters by the exact status text from the CSV.</li>
+                <li><strong>Status Category</strong> filters by the Jira category, usually To Do, In Progress, or Done.</li>
+                <li><strong>Parent Key</strong> filters to one parent key. <code>(None)</code> means the issue has no parent key at all.</li>
+                <li><strong>Parent Kind</strong> groups parent relationships into <code>Epic</code>, <code>Feature</code>, <code>Other Matched Parent</code>, <code>Unmatched Parent Key</code>, and <code>No Parent Key</code>.</li>
+                <li><strong>Assignee</strong> filters by assignee name. Empty assignees are normalized to <code>Unassigned</code>.</li>
+                <li><strong>Sprint</strong> filters to one sprint value. <code>(None)</code> means the issue has no sprint entries.</li>
+              </ul>
+            </article>
+          </div>
+
+          <article class="card guide-card">
+            <div class="title">Quick Filter Checkboxes</div>
+            <div class="guide-table-wrap">
+              <table class="guide-table">
+                <thead>
+                  <tr><th>Filter</th><th>What it does</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Exclude done</td><td>Removes issues whose Status Category resolves to <code>Done</code>.</td></tr>
+                  <tr><td>Only active</td><td>Keeps issues not in the <code>Done</code> status bucket.</td></tr>
+                  <tr><td>Only unassigned</td><td>Keeps issues whose assignee is blank and normalized to <code>Unassigned</code>.</td></tr>
+                  <tr><td>No sprint</td><td>Keeps issues with no sprint values.</td></tr>
+                  <tr><td>Empty description</td><td>Keeps issues whose description field is blank.</td></tr>
+                  <tr><td>Missing story points</td><td>Keeps issues where the <code>Story Points</code> field itself is blank.</td></tr>
+                  <tr><td>Missing dev points</td><td>Keeps issues where <code>Dev Story points</code> is blank.</td></tr>
+                  <tr><td>Missing test points</td><td>Keeps issues where <code>Test Story Points</code> is blank.</td></tr>
+                  <tr><td>Missing parent</td><td>Keeps issues with either <code>No Parent Key</code> or <code>Unmatched Parent Key</code>.</td></tr>
+                  <tr><td>Estimate mismatch</td><td>Keeps issues where two or more populated point fields disagree numerically.</td></tr>
+                  <tr><td>Exclude epics/features</td><td>Removes parent-container issue types. The app treats <code>Epic</code>, <code>Feature</code>, and <code>Initiative</code> as containers.</td></tr>
+                  <tr><td>Only stories</td><td>Keeps only issues whose type is <code>Story</code>.</td></tr>
+                  <tr><td>Only bugs</td><td>Keeps only issues whose type is <code>Bug</code>.</td></tr>
+                  <tr><td>Only tasks/sub-tasks</td><td>Keeps only <code>Task</code>, <code>Sub-task</code>, or <code>Subtask</code> rows.</td></tr>
+                  <tr><td>Backlog only</td><td>Keeps issues whose Status text is exactly <code>Backlog</code>.</td></tr>
+                  <tr><td>Critical / blocker</td><td>Keeps issues where <code>Priority</code> is <code>Blocker</code> or <code>Severity</code> is <code>Critical</code>.</td></tr>
+                  <tr><td>Stale not done</td><td>Keeps issues not in Done that have not been updated for at least 14 days.</td></tr>
+                  <tr><td>Recently updated</td><td>Keeps issues updated within the last 7 days.</td></tr>
+                  <tr><td>Created recently</td><td>Keeps issues created within the last 7 days.</td></tr>
+                  <tr><td>Multi-sprint</td><td>Keeps issues associated with more than one sprint value.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel" id="presets">
+          <h2>Quick Presets</h2>
+          <div class="guide-card-grid">
+            <article class="card guide-card">
+              <div class="title">None</div>
+              <p>Does not pre-filter anything.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Active Delivery</div>
+              <p>Keeps all issues that are not in the Done status bucket.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Planning Gaps</div>
+              <p>Keeps active issues that are missing story points, dev points, test points, description, or a valid parent relationship.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Needs Triage</div>
+              <p>Keeps active issues that are unassigned, critical/blocker, missing a matched parent, or missing a description.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Ready For Grooming</div>
+              <p>Keeps active non-container issues in the To Do bucket that are missing story points, missing a description, or missing a valid parent relationship.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="reports">
+          <h2>Reports</h2>
+          <div class="guide-card-grid">
+            <article class="card guide-card">
+              <div class="title">Filtered Issues</div>
+              <p>The raw issue-level view after your current filters. This is the best report for ad hoc inspection and export.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Story To Parent Mapping</div>
+              <p>Shows each issue with its parent key, whether that parent was found in the loaded dataset, the matched parent type, and the issue's parent kind classification.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Missing Story Points</div>
+              <p>Shows non-container issues where the <code>Story Points</code> field is blank. This report does not count epics, features, or initiatives.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Missing Parent</div>
+              <p>Shows work items such as stories, bugs, tasks, and subtasks that have no parent key or whose parent key does not match any issue in the loaded CSV.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Sprint Summary</div>
+              <p>Aggregates the filtered issues by sprint and shows issue count, total effective estimate, status buckets, and unestimated count. Issues with no sprint are grouped under <code>(No Sprint)</code>.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Assignee Workload</div>
+              <p>Aggregates the filtered issues by assignee with counts, total effective estimate, status buckets, and unestimated count.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Epic Breakdown</div>
+              <p>Shows container issues with their child issues underneath. Child issues whose parent does not resolve to a loaded container are grouped into <code>(No Epic)</code>.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="exports">
+          <h2>Exports</h2>
+          <div class="guide-card-grid">
+            <article class="card guide-card">
+              <div class="title">Export Report</div>
+              <p>Downloads the currently visible report, using the current filters and the currently selected report layout.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Export Cleaned CSV</div>
+              <p>Downloads the original dataset with fully empty columns removed. It does not export just the filtered rows, and it does not rewrite issue values. It is mainly for cleaning wide Jira exports.</p>
+            </article>
+            <article class="card guide-card">
+              <div class="title">Reset Filters</div>
+              <p>Returns all filters to their default state and switches the active report back to <code>Filtered Issues</code>.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="notes">
+          <h2>Helpful Notes</h2>
+          <div class="guide-copy">
+            <p><strong>Parent matching only works inside the loaded CSV.</strong> If a child points to a parent issue that is not included in the export, that relationship shows up as <code>Unmatched Parent Key</code>.</p>
+            <p><strong>Status bucket logic is simplified.</strong> The app maps Jira Status Category values into three buckets for summary purposes: <code>todo</code>, <code>in_progress</code>, and <code>done</code>.</p>
+            <p><strong>Epic Breakdown uses container logic.</strong> In this app, <code>Epic</code>, <code>Feature</code>, and <code>Initiative</code> are treated as parent containers.</p>
+            <p><strong>Everything is static-site friendly.</strong> Because the app and this guide are plain static files, both pages work cleanly on GitHub Pages.</p>
+          </div>
+        </section>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
