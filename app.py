@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 import tkinter as tk
+import tkinter.font as tkfont
 from tkinter import filedialog, messagebox, ttk
 
 
@@ -827,6 +828,13 @@ class JiraAnalyzerApp:
         self._build_ui()
         self._bind_events()
 
+    def _build_tree_fonts(self) -> tuple[tkfont.Font, tkfont.Font]:
+        base_font = tkfont.nametofont("TkDefaultFont").copy()
+        base_size = int(base_font.cget("size"))
+        epic_font = base_font.copy()
+        epic_font.configure(size=base_size + 1 if base_size > 0 else base_size - 1, weight="bold")
+        return base_font, epic_font
+
     def _build_ui(self) -> None:
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(3, weight=1)
@@ -1026,6 +1034,11 @@ class JiraAnalyzerApp:
 
         self.tree = ttk.Treeview(results, columns=(), show="headings")
         self.tree.grid(row=0, column=0, sticky="nsew")
+        self.tree_base_font, self.tree_epic_font = self._build_tree_fonts()
+        tree_style = ttk.Style(self.root)
+        tree_style.configure("Jira.Treeview", rowheight=self.tree_epic_font.metrics("linespace") + 8)
+        self.tree.configure(style="Jira.Treeview")
+        self.tree.tag_configure("epic_group", font=self.tree_epic_font)
 
         y_scroll = ttk.Scrollbar(results, orient="vertical", command=self.tree.yview)
         y_scroll.grid(row=0, column=1, sticky="ns")
@@ -1312,6 +1325,7 @@ class JiraAnalyzerApp:
                 text=f"{epic['issue_key']} - {epic['summary']}",
                 values=epic_row,
                 open=self.tree_all_expanded,
+                tags=("epic_group",),
             )
             for child in children:
                 child_row = [
@@ -1347,6 +1361,7 @@ class JiraAnalyzerApp:
                 text="(No Epic)",
                 values=["", "", "", "", "", str(len(orphans))],
                 open=self.tree_all_expanded,
+                tags=("epic_group",),
             )
             for child in orphans:
                 child_row = [
