@@ -821,6 +821,8 @@ class JiraAnalyzerApp:
         self.summary_var = tk.StringVar(value="Load a Jira CSV export to begin.")
         self.status_var_text = tk.StringVar(value="Ready")
         self.counts_var = tk.StringVar(value="Rows: 0 | Columns: 0 | Issues: 0")
+        self.tree_toggle_label_var = tk.StringVar(value="Expand All")
+        self.tree_all_expanded = True
 
         self._build_ui()
         self._bind_events()
@@ -831,13 +833,20 @@ class JiraAnalyzerApp:
 
         top = ttk.Frame(self.root, padding=12)
         top.grid(row=0, column=0, sticky="ew")
-        top.columnconfigure(4, weight=1)
+        top.columnconfigure(5, weight=1)
 
         ttk.Button(top, text="Load Jira CSV", command=self.load_csv).grid(row=0, column=0, padx=(0, 8))
         ttk.Button(top, text="Export Report", command=self.export_report).grid(row=0, column=1, padx=8)
         ttk.Button(top, text="Export Cleaned CSV", command=self.export_cleaned_csv).grid(row=0, column=2, padx=8)
         ttk.Button(top, text="Reset Filters", command=self.reset_filters).grid(row=0, column=3, padx=8)
-        ttk.Label(top, textvariable=self.file_label_var).grid(row=0, column=4, sticky="e")
+        self.tree_toggle_button = ttk.Button(
+            top,
+            textvariable=self.tree_toggle_label_var,
+            command=self.toggle_epic_tree,
+            state="disabled",
+        )
+        self.tree_toggle_button.grid(row=0, column=4, padx=8)
+        ttk.Label(top, textvariable=self.file_label_var).grid(row=0, column=5, sticky="e")
 
         summary = ttk.LabelFrame(self.root, text="Dataset", padding=12)
         summary.grid(row=1, column=0, sticky="ew", padx=12, pady=(0, 8))
@@ -1058,6 +1067,8 @@ class JiraAnalyzerApp:
             combo.bind("<<ComboboxSelected>>", self._handle_filter_event)
         self.root.bind_all("<Control-o>", lambda _event: self.load_csv())
         self.search_var.trace_add("write", self._handle_search_change)
+        self.tree.bind("<<TreeviewOpen>>", self._handle_tree_open_close)
+        self.tree.bind("<<TreeviewClose>>", self._handle_tree_open_close)
 
     def _handle_filter_event(self, _event: tk.Event) -> None:
         self.refresh_report()
@@ -1186,6 +1197,7 @@ class JiraAnalyzerApp:
 
     def refresh_report(self) -> None:
         if not self.dataset:
+            self._update_tree_toggle_state()
             self._show_placeholder()
             return
 
@@ -1234,6 +1246,7 @@ class JiraAnalyzerApp:
         self.summary_var.set(summary)
         self.status_var_text.set(f"Active report: {self.report_var.get()} | Filtered issues: {len(filtered)}")
         self._render_table(columns, rows)
+        self._update_tree_toggle_state()
 
     def _show_placeholder(self) -> None:
         self.current_columns = ["Message"]
@@ -1298,7 +1311,7 @@ class JiraAnalyzerApp:
                 "end",
                 text=f"{epic['issue_key']} - {epic['summary']}",
                 values=epic_row,
-                open=True,
+                open=self.tree_all_expanded,
             )
             for child in children:
                 child_row = [
@@ -1333,7 +1346,7 @@ class JiraAnalyzerApp:
                 "end",
                 text="(No Epic)",
                 values=["", "", "", "", "", str(len(orphans))],
-                open=False,
+                open=self.tree_all_expanded,
             )
             for child in orphans:
                 child_row = [
@@ -1364,6 +1377,42 @@ class JiraAnalyzerApp:
 
         self.current_columns = flat_columns
         self.current_rows = flat_rows
+        self._update_tree_toggle_state()
+
+    def _is_epic_breakdown_active(self) -> bool:
+        return self.dataset is not None and self.report_var.get() == REPORT_EPIC_BREAKDOWN
+
+    def _set_top_level_tree_open(self, is_open: bool) -> None:
+        self.tree_all_expanded = is_open
+        for item_id in self.tree.get_children():
+            self.tree.item(item_id, open=is_open)
+        self._update_tree_toggle_state()
+
+    def _update_tree_toggle_state(self) -> None:
+        if not hasattr(self, "tree_toggle_button"):
+            return
+        if not self._is_epic_breakdown_active():
+            self.tree_toggle_label_var.set("Expand All")
+            self.tree_toggle_button.state(["disabled"])
+            return
+
+        top_level_items = self.tree.get_children()
+        if not top_level_items:
+            self.tree_toggle_label_var.set("Expand All")
+            self.tree_toggle_button.state(["disabled"])
+            return
+
+        self.tree_toggle_button.state(["!disabled"])
+        self.tree_all_expanded = all(bool(self.tree.item(item_id, "open")) for item_id in top_level_items)
+        self.tree_toggle_label_var.set("Collapse All" if self.tree_all_expanded else "Expand All")
+
+    def _handle_tree_open_close(self, _event: tk.Event) -> None:
+        self._update_tree_toggle_state()
+
+    def toggle_epic_tree(self) -> None:
+        if not self._is_epic_breakdown_active():
+            return
+        self._set_top_level_tree_open(not self.tree_all_expanded)
 
     def export_report(self) -> None:
         if not self.current_columns or not self.current_rows:
